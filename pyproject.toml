@@ -1,0 +1,30 @@
+
+[project]
+name = "infanttools"
+version = "0.1.0"
+authors = [
+  { name="Daniel Helkey", email="dhelkey@stanford.edu" },
+    { name="Marinka Zitnik" , email="marinka@hms.harvard.edu"}
+]
+description = "A Python package to compute neonatal transfer networks and describe their shape and structure."
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+  "numpy",
+  "scipy",
+  "igraph",
+  "networkx",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/dhelkey/infanttools"
+"Bug Tracker" = "https://github.com/dhelkey/infanttools/issues"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
