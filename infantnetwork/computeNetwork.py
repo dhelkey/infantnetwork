@@ -98,7 +98,9 @@ def computeNetwork(df_in, from_var='prevhospid', to_var='hospid',
     # Nodes within Connected Components
     largest_connected_component_nodes = max(connected_components_list, key=len) if \
                                             num_connected_components > 0 else set()
-    max_node_percentage_by_component = len(largest_connected_component_nodes) / len(G_undirected) * 100  
+    
+    max_node_percentage_by_component = len(largest_connected_component_nodes) / len(G_undirected) * 100\
+          if len(G_undirected)> 0 else 0 
 
     # Edge Weights within Connected Components 
     edge_weights = {(min(u, v), max(u, v)): data['weight'] for u, v, data in G_undirected.edges(data=True)}
@@ -122,20 +124,22 @@ def computeNetwork(df_in, from_var='prevhospid', to_var='hospid',
 
     # Calculate the percentage
     max_weight_percentage_by_component = largest_component_weight / \
-                                             total_graph_weight * 100
+                                             total_graph_weight * 100 \
+                                if total_graph_weight > 0 else 0
 
     #Sumary dataframe of connected components
     components = list(nx.connected_components(G_undirected))
     df_components = pd.DataFrame([
         {
-            'Component_Num': i + 1,  # Number components starting from 1
-            'Component': component,
-            'Node_Percentage': len(component) / len(G_undirected) * 100,
-            'Weight_Percentage': component_weight(component) / total_graph_weight * 100
+            'component_num': i + 1, 
+            'component': component,
+            'node_percentage': len(component) / len(G_undirected) * 100,
+            'weight_percentage': component_weight(component) / total_graph_weight * 100
         }
         for i, component in enumerate(components)
     ])
-    df_components.sort_values(by='Weight_Percentage', ascending=False, inplace=True)
+    if len(df_components) > 0:
+        df_components.sort_values(by='weight_percentage', ascending=False, inplace=True)
 
     #Network metrics
     
@@ -177,8 +181,10 @@ def computeNetwork(df_in, from_var='prevhospid', to_var='hospid',
   
     ## Modularity
     #Greedy modularity
+
     modularity_greedy = nx.algorithms.community.modularity(G_undirected, 
-        nx.algorithms.community.greedy_modularity_communities(G_undirected))
+        nx.algorithms.community.greedy_modularity_communities(G_undirected)) \
+        if len(G_undirected) > 0 else 0
     
     #Random walk modularity
     giant_component = g.components(mode='weak').giant()
