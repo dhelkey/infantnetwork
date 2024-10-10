@@ -38,7 +38,7 @@ The network_metrics atribute of computeNetwork returns the following quantatitve
 | `centrality_median`               | Median node Katz centrality.                     |
 | `centrality_mean_receiving`        | Mean node Katz centrality of nodes with incoming transfers.        |
 | `density_unweighted`              | Network density (total proportion of possible edges observed)                                         |
-| `density_weighted`                | Weighted network density: $$\frac{\sum \text{edge\_weights}}{\text{n}\_ \text{edges} \cdot \max(\text{edge\_weights})}$$ |
+| `density_weighted`                | Weighted network density: $$\frac{\sum \text{edge\_weights}}{\text{(n\_edges)} \cdot \max(\text{edge\_weights})}$$ |
 | `efficiency_global`               | Global network efficiency.                 |
 | `efficiency_median_local`         | Median of local node efficiencies.          |
 | `modularity_greedy`               | Network modularity using the greedy community modularity algorithm.      |
