@@ -146,7 +146,6 @@ def computeNetwork(df_in, from_var='prevhospid', to_var='hospid',
     # Efficiency
     ## Global eficiency
     efficiency_global = nx.global_efficiency(G_undirected)
-    
     ## Median local node efficiency
     local_efficiencies = []
     for node in G_undirected.nodes():
@@ -156,11 +155,11 @@ def computeNetwork(df_in, from_var='prevhospid', to_var='hospid',
             # Nodes with fewer than two neighbors have local efficiency = 0
             local_efficiencies.append(0)
             continue
-
         subgraph = G_undirected.subgraph(neighbors)
         local_efficiency = nx.global_efficiency(subgraph)
         local_efficiencies.append(local_efficiency)
-    efficiency_median_local = np.median(local_efficiencies)
+    efficiency_median_local = np.median(local_efficiencies) \
+        if local_efficiencies else 0
     
     # Density 
     ## Unweighted density
@@ -170,23 +169,27 @@ def computeNetwork(df_in, from_var='prevhospid', to_var='hospid',
     density_weighted = np.sum(edge_weights) / (len(edge_weights) * np.max(edge_weights)) if \
                                                      edge_weights else 0
 
-    ## Centrality
+    # Centrality
     katz_centralities = nx.katz_centrality_numpy(G_undirected)
+    katz_centralities_values = list(katz_centralities.values())
     in_degrees = dict(G.in_degree())
     ## Median node centrality 
-    centrality_median = np.median(list(katz_centralities.values()))
-    ## Mean centrality of nodes with incoming transfers
-    centrality_mean_receiving = np.mean([katz_centralities[node] for \
-            node, count in in_degrees.items() if count > 0])
-  
-    ## Modularity
-    #Greedy modularity
-
+    centrality_median = np.median(list(katz_centralities_values)) \
+        if katz_centralities_values else 0
+    ## Mean node centrality
+    receiving_centralities = [katz_centralities[node] for node, count \
+                              in in_degrees.items() if count > 0 and not \
+                                np.isnan(katz_centralities[node])] 
+    centrality_mean_receiving = np.mean(receiving_centralities) if receiving_centralities\
+          else 0
+    
+    # Modularity
+    ## Greedy modularity
     modularity_greedy = nx.algorithms.community.modularity(G_undirected, 
         nx.algorithms.community.greedy_modularity_communities(G_undirected)) \
         if len(G_undirected) > 0 else 0
     
-    #Random walk modularity
+    ## Random walk modularity
     giant_component = g.components(mode='weak').giant()
     random_walk = giant_component.community_walktrap(steps=random_walk_steps,
                      weights=giant_component.es['weight']).as_clustering()
@@ -197,7 +200,7 @@ def computeNetwork(df_in, from_var='prevhospid', to_var='hospid',
         'n_nodes': n_nodes,
         'n_edges_all':n_edges_all,
         'n_edges':n_edges,
-        'n_transfer_all':n_transfers_all,
+        'n_transfers_all':n_transfers_all,
         'n_transfers':n_transfers,
         'n_self_loops':n_self_loops,
         'centrality_mean_receiving': centrality_mean_receiving,
