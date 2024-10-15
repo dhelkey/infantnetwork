@@ -1,14 +1,14 @@
 
 [project]
-name = "infanttools"
-version = "0.1.0"
+name = "infantnetwork"
+version = "0.1.2"
 authors = [
   { name="Daniel Helkey", email="dhelkey@stanford.edu" },
     { name="Marinka Zitnik" , email="marinka@hms.harvard.edu"}
 ]
-description = "A Python package to compute neonatal transfer networks and describe their shape and structure."
+description = "Python package to construct and describe neonatal transfer networks."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.6"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -22,9 +22,14 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/dhelkey/infanttools"
-"Bug Tracker" = "https://github.com/dhelkey/infanttools/issues"
+"Homepage" = "https://github.com/dhelkey/infantnetwork"
+"Bug Tracker" = "https://github.com/dhelkey/infantnetwork/issues"
 
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["infantnetwork"]
+exclude = ["LICENSES", "tests", "tests.*", "*.tests", "*.tests.*"]

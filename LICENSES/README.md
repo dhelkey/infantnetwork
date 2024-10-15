@@ -1,5 +1,6 @@
-infantnetwork is released under the [MIT License](LICENSE)
+A Python package to compute neonatal transfer networks and describe their shape and structure.
 
+infantnetwork is released under the [MIT License](LICENSE/)
 
 infantnetwork utilizes components from multiple other open-source packages.
 

@@ -1,4 +1,9 @@
 .env
 .ipynb_checkpoints
+.pytest_cache
+
+.vscode/
+__pycache__/
 dist/
-.egg-info*
+build/
+env/

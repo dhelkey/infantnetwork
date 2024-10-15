@@ -2,10 +2,19 @@
 
 Python package for constructing networks from infant transfer records. Functions and example code is provided to construct networks and describe their shape and structure.
 
+infantnetwork uses the computational backends [NetworkX](https://networkx.org/) and [igraph](https://igraph.org/python/).
+
 
 Code is released under the open-source [MIT License](LICENSE).
 
 
+## Installation
+
+Install the package using pip:
+
+```bash
+pip install infantnetwork
+```
 
 ### Usage
 
@@ -45,4 +54,5 @@ The network_metrics atribute of computeNetwork returns the following quantatitve
 | `modularity_randomwalk`           | Network modularity using random walktrap algorithm             |
 | `max_node_percentage_by_component`| Percentage of nodes in the largest connected component.                                   |
 | `max_weight_percentage_by_component`| Percentage of weight (transfers) within the largest connected component.                  |
+
 
