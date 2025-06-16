@@ -1,0 +1,26 @@
+cff-version: 1.0.0
+title: infantnetwork
+message: 'If you use infantnetwork, please cite it using the format defined by this file.'
+type: software
+authors:
+  - given-names: Daniel
+    family-names: Helkey
+    name-suffix: MS
+    affiliation: Stanford School of Medicine
+    email: dhelkey@stanford.edu
+    orcid: 'https://orcid.org/0000-0003-4728-2941'  
+  - given-names: Marinka
+    family-names: Zitnik
+    name-suffix: PhD
+    affiliation: Stanford School of Medicine
+    email: dhelkey@stanford.edu
+    orcid: 'https://orcid.org/0000-0001-8530-7228'
+  - given-names: Sarah
+    family-names: Kunz
+    name-suffix: 'MD,MPH'
+    affiliation: Stanford School of Medicine
+    email: dhelkey@stanford.edu
+    orcid: 'https://orcid.org/0000-0003-1344-7293'
+identifiers:
+  - type: url
+    value: 'https://github.com/dhelkey/infantnetwork'
