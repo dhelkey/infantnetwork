@@ -1,0 +1,21 @@
+# -------------------------------------------------------------------
+# conda env create -f network.yml
+# -------------------------------------------------------------------
+
+name: network
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+- python=3.12.11
+- numpy==1.26.4
+- pandas=2.2.3
+- scikit-learn=1.4.2
+- statsmodels==0.14.5
+- networkx==3.3
+- python-igraph==0.11.6
+- matplotlib=3.10.3
+- seaborn=0.13.2
+- ipykernel=6.29.5
+- ipython==9.4.0
+- pytest==9.0.2

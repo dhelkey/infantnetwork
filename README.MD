@@ -6,6 +6,8 @@ Functions and example code are provided to construct networks and describe their
 
 infantnetwork uses the computational backends [NetworkX](https://networkx.org/) and [igraph](https://igraph.org/python/).
 
+The provided Conda [environment file](network.yml) includes all required dependencies.
+
 Code is released under the open-source [MIT License](LICENSE).
 
 ## Authors
