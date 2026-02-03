@@ -4,6 +4,7 @@ from typing import Tuple, Dict, Any
 import networkx as nx
 import igraph as ig
 
+
 def process_edges(df_in: pd.DataFrame, 
                   from_var: str = 'prevhospid', 
                   to_var: str = 'hospid') -> Tuple[pd.DataFrame, pd.DataFrame]:
@@ -34,7 +35,7 @@ def process_edges(df_in: pd.DataFrame,
         except Exception as e:
             raise TypeError(f"Failed to convert column '{col}' to string: {e}")
 
-    #Edge counts
+    # Edge counts
     edge_df = (
         df.groupby([from_var, to_var])
         .size()
@@ -42,6 +43,7 @@ def process_edges(df_in: pd.DataFrame,
         .rename(columns={from_var: 'from', to_var: 'to'})
     )
     return edge_df
+
 
 def calculate_standard_metrics(edge_df: pd.DataFrame) -> Dict[str, int]:
     """
@@ -83,6 +85,7 @@ def calculate_standard_metrics(edge_df: pd.DataFrame) -> Dict[str, int]:
         'n_nodes': n_nodes
     }
 
+
 def edge_df_check(edge_df: pd.DataFrame) -> pd.DataFrame:
     """
     Validate an edge DataFrame for graph construction.
@@ -103,6 +106,7 @@ def edge_df_check(edge_df: pd.DataFrame) -> pd.DataFrame:
     if edge_df[['from', 'to']].isnull().any().any():
         raise ValueError("Columns 'from' and 'to' must not contain NaN.")
     return edge_df
+
 
 def create_networkx_graphs(edge_df: pd.DataFrame) -> Tuple[nx.Graph, nx.DiGraph]:
     """
@@ -137,6 +141,7 @@ def create_networkx_graphs(edge_df: pd.DataFrame) -> Tuple[nx.Graph, nx.DiGraph]
 
     return nx_undirected, nx_directed
 
+
 def create_igraph_graphs(edge_df: pd.DataFrame) -> Tuple[ig.Graph, ig.Graph]:
     """
     Creates directed and undirected iGraph graphs from an edge DataFrame.
@@ -168,6 +173,7 @@ def create_igraph_graphs(edge_df: pd.DataFrame) -> Tuple[ig.Graph, ig.Graph]:
     # Undirected iGraph
     ig_undirected = ig_directed.as_undirected(combine_edges=sum)
     return ig_undirected, ig_directed
+
 
 def compute_node_metrics(
     edge_df: pd.DataFrame,
@@ -238,7 +244,8 @@ def compute_node_metrics(
 
     node_metrics = pd.DataFrame(node_metrics)
     node_metrics = node_metrics[np.sort(node_metrics.columns)]
-    return(node_metrics)
+    return node_metrics
+
 
 def compute_network_metrics(
     edge_df: pd.DataFrame,
@@ -266,7 +273,7 @@ def compute_network_metrics(
                         Values are the calculated metric (int, float, bool, list, or None).
 
     Raises:
-        TypeError: If input arguments are not of the expected graph types or directedness.
+        TypeError: If input arguments are not of the expected graph types.
         ValueError: If graphs are empty, or if node_df is unsuitable.
         AttributeError: If iGraph objects lack expected attributes ('name', 'weight').
         KeyError: If node_df is missing expected columns for averaging, or during calculation if dependencies are missing.
@@ -303,8 +310,7 @@ def compute_network_metrics(
     network_metrics['efficiency_local'] = nx.local_efficiency(nx_undirected)
 
     network_metrics['is_connected'] = nx.is_connected(nx_undirected)
-    network_metrics['number_connected_components'] = \
-            nx.number_connected_components(nx_undirected)
+    network_metrics['number_connected_components'] = nx.number_connected_components(nx_undirected)
     network_metrics['is_weakly_connected'] = nx.is_weakly_connected(nx_directed)
     network_metrics['number_weakly_connected_components'] = \
         nx.number_weakly_connected_components(nx_directed)
@@ -324,10 +330,10 @@ def compute_network_metrics(
         nx.algorithms.community.greedy_modularity_communities(nx_undirected))
     
     # Random walk modularity
-    random_walk_steps=5
+    random_walk_steps = 5
     giant_component = ig_directed.components(mode='weak').giant()
     random_walk = giant_component.community_walktrap(steps=random_walk_steps,
-                     weights=giant_component.es['weight']).as_clustering()
+        weights=giant_component.es['weight']).as_clustering()
     network_metrics['modularity_randomwalk'] = giant_component.modularity(random_walk.membership)
 
     network_metrics['modularity_community'] = nx.community.modularity(nx_undirected, 
@@ -335,17 +341,18 @@ def compute_network_metrics(
 
     node_numeric_cols = node_df.select_dtypes(include='number').columns
 
-    #Standard aggregations for node metrics
+    # Standard aggregations for node metrics
     standard_aggregations = ['mean', 'median', 'std', 'min', 'max']
     # standard_aggregations = ['mean', 'median']
     agg_results_df = node_df[node_numeric_cols].agg(standard_aggregations)
 
     for agg_name, row_series in agg_results_df.iterrows():
-        prefix =  agg_name
+        prefix = agg_name
         for col_name, value in row_series.items():
             metric_key = f"{col_name}_{prefix}"
             network_metrics[metric_key] = value
     return network_metrics
+
 
 def compute_network(df_in: pd.DataFrame, 
                   from_var: str = 'prevhospid', 
@@ -353,31 +360,31 @@ def compute_network(df_in: pd.DataFrame,
                   edge_cutoff=1,
                   return_initial=False):
 
-    #Calculate included edges, all edges (all edges only used in computing initial_[vars])
+    # Calculate included edges, all edges (all edges only used in computing initial_[vars])
     edge_df = process_edges(df_in, from_var, to_var)
 
-    #Compute initial metrics
+    # Compute initial metrics
     network_metrics_dict = calculate_standard_metrics(edge_df)
     network_metrics_dict_initial = {f'{key}_initial':val for \
                         key,val in network_metrics_dict.items() }
     if return_initial:
         network_metrics_dict.update(network_metrics_dict_initial)
 
-    #Restrict to edges matching cutoff
+    # Restrict to edges matching cutoff
     edge_df = edge_df[edge_df['weight']>=edge_cutoff]
 
-    #Construct networkx and Igraph networks 
+    # Construct networkx and Igraph networks 
     nx_undirected, nx_directed = create_networkx_graphs(edge_df)
     ig_undirected, ig_directed = create_igraph_graphs(edge_df)
 
-    #Compute nodes and edges
+    # Compute nodes and edges
     node_metrics = compute_node_metrics(edge_df,
                 nx_undirected, nx_directed, ig_undirected, ig_directed)
     network_metrics = compute_network_metrics(edge_df,node_metrics,
                 nx_undirected, nx_directed, ig_undirected, ig_directed)
     network_metrics_dict.update(network_metrics)
 
-    #Connected component analysis
+    # Connected component analysis
     num_connected_components = nx.number_connected_components( nx_undirected)
     connected_components_nodes = list(nx.connected_components( nx_undirected))
     component_summary_list = list()
@@ -410,11 +417,11 @@ def compute_network(df_in: pd.DataFrame,
     df_components = pd.DataFrame(component_summary_list)
     df_components = df_components[np.sort(df_components.columns)]
 
-    return({'metrics':network_metrics_dict,
-                    'node_metrics':node_metrics,
-                    'edge_metrics':edge_df,
-                    'df_components':df_components,
-                    'nx_undirected':nx_undirected,
-                    'nx_directed':nx_directed,
-                    'ig_undirected':ig_undirected,
-                    'ig_directed':ig_directed})
+    return {'metrics': network_metrics_dict,
+            'node_metrics': node_metrics,
+            'edge_metrics': edge_df,
+            'df_components': df_components,
+            'nx_undirected': nx_undirected,
+            'nx_directed': nx_directed,
+            'ig_undirected': ig_undirected,
+            'ig_directed': ig_directed}
