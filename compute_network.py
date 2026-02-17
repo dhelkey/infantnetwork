@@ -326,8 +326,8 @@ def compute_network_metrics(
     network_metrics['global_clustering'] = ig_undirected.transitivity_undirected()
 
     # Greedy modularity
-    network_metrics['modularity_greedy'] = nx.algorithms.community.modularity(nx_undirected, 
-        nx.algorithms.community.greedy_modularity_communities(nx_undirected))
+    network_metrics['modularity_greedy'] = nx.algorithms.community.modularity(
+        nx_undirected, nx.algorithms.community.greedy_modularity_communities(nx_undirected))
     
     # Random walk modularity
     random_walk_steps = 5
@@ -355,10 +355,10 @@ def compute_network_metrics(
 
 
 def compute_network(df_in: pd.DataFrame, 
-                  from_var: str = 'prevhospid', 
-                  to_var: str = 'hospid',
-                  edge_cutoff=1,
-                  return_initial=False):
+                    from_var: str = 'prevhospid', 
+                    to_var: str = 'hospid',
+                    edge_cutoff=1,
+                    return_initial=False):
 
     # Calculate included edges, all edges (all edges only used in computing initial_[vars])
     edge_df = process_edges(df_in, from_var, to_var)
@@ -380,7 +380,7 @@ def compute_network(df_in: pd.DataFrame,
     # Compute nodes and edges
     node_metrics = compute_node_metrics(edge_df,
                 nx_undirected, nx_directed, ig_undirected, ig_directed)
-    network_metrics = compute_network_metrics(edge_df,node_metrics,
+    network_metrics = compute_network_metrics(edge_df, node_metrics,
                 nx_undirected, nx_directed, ig_undirected, ig_directed)
     network_metrics_dict.update(network_metrics)
 
@@ -402,13 +402,15 @@ def compute_network(df_in: pd.DataFrame,
             node_metrics_use = compute_node_metrics(edge_df_use,
             nx_undirected_use, nx_directed_use,ig_undirected_use, ig_directed_use)
 
-            network_metrics_component = compute_network_metrics(edge_df_use, node_metrics_use,
-                nx_undirected_use, nx_directed_use, ig_undirected_use, ig_directed_use)
+            network_metrics_component = compute_network_metrics(
+                                edge_df_use, node_metrics_use,
+                                nx_undirected_use, nx_directed_use, 
+                                ig_undirected_use, ig_directed_use)
             
             out = dict()
             for summary_type, summary_level_var \
-                    in zip(['node','edge','weight'],
-                           ['n_nodes','n_edges','weight_total']):
+                    in zip(['node', 'edge', 'weight'],
+                           ['n_nodes', 'n_edges', 'weight_total']):
                 out[f'{summary_type}_pct'] = network_metrics_component[summary_level_var]\
                                             /network_metrics_dict[summary_level_var]    
             out.update(network_metrics_component)
