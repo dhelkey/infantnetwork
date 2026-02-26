@@ -10,20 +10,30 @@ The provided Conda [environment file](network.yml) includes all required depende
 
 Code is released under the open-source [MIT License](LICENSE).
 
-## Authors
-    Daniel Helkey, MS
-    dhelkey@stanford.edu
-    
-    Marinka Zitnik, Ph.D.
-    marinka@hms.harvard.edu
+# Authors
 
-    Sarah Kunz, MD, 
-    skunz@bidmc.harvard.edu
+**Daniel Helkey, MS**  
+Stanford University  
+dhelkey@stanford.edu  
 
-Supports:
-    Kunz, S.N., Helkey, D., Zitnik, M., Phibbs, C.S., Rigdon, J., Zupancic, J.A. and Profit, J., 2021. 
-    Quantifying the variation in neonatal transport referral patterns 
-    using network analysis. Journal of Perinatology, 41(12), pp.2795-2803.
+**Marinka Zitnik, Ph.D.**  
+Harvard Medical School  
+marinka@hms.harvard.edu  
+
+**Sarah Kunz, MD**  
+Beth Israel Deaconess Medical Center  
+skunz@bidmc.harvard.edu  
+
+---
+
+# Supporting Publications
+
+Kunz, S.N., Helkey, D., Zitnik, M., Phibbs, C.S., Rigdon, J., Zupancic, J.A., & Profit, J. (2021).  
+*Quantifying the variation in neonatal transport referral patterns using network analysis.*  
+**Journal of Perinatology, 41**(12), 2795–2803.  
+
+
+Additional papers in progress.
 
 ## Citing this package
 
