@@ -91,13 +91,15 @@ def edge_df_check(edge_df: pd.DataFrame) -> pd.DataFrame:
     Validate an edge DataFrame for graph construction.
 
     Args:
-        edge_df (pd.DataFrame): DataFrame expected to have columns ['from', 'to', 'weight'].
+        edge_df (pd.DataFrame): DataFrame expected to have columns 
+            ['from', 'to', 'weight'].
 
     Returns:
         pd.DataFrame: (self) The same DataFrame if checks pass.
 
     Raises:
-        ValueError: If required columns are missing or if any 'from'/'to' values are NaN.
+        ValueError: If required columns are missing 
+        or if any 'from'/'to' values are NaN.
     """
     required = {'from', 'to', 'weight'}
     missing = required - set(edge_df.columns)
@@ -210,7 +212,7 @@ def compute_node_metrics(
                    during metric calculation (e.g., convergence errors).
     """
     if not isinstance(edge_df, pd.DataFrame):
-         raise TypeError("edge_df must be a pandas DataFrame.")
+        raise TypeError("edge_df must be a pandas DataFrame.")
     if not isinstance(nx_undirected, nx.Graph) or isinstance(nx_undirected, nx.DiGraph):
         raise TypeError("nx_undirected must be a non-directed nx.Graph.")
     if not isinstance(nx_directed, nx.DiGraph):
@@ -283,9 +285,9 @@ def compute_network_metrics(
         Exception: Other specific exceptions from NetworkX or iGraph during metric calculation.
     """
     if not isinstance(edge_df, pd.DataFrame):
-         raise TypeError("edge_df must be a pandas DataFrame.")
+        raise TypeError("edge_df must be a pandas DataFrame.")
     if not isinstance(node_df, pd.DataFrame):
-         raise TypeError("node_df must be a pandas DataFrame.")
+        raise TypeError("node_df must be a pandas DataFrame.")
     if not isinstance(nx_undirected, nx.Graph) or isinstance(nx_undirected, nx.DiGraph):
         raise TypeError("nx_undirected must be a non-directed nx.Graph.")
     if not isinstance(nx_directed, nx.DiGraph):
@@ -360,7 +362,7 @@ def compute_network(df_in: pd.DataFrame,
                     edge_cutoff=1,
                     return_initial=False):
 
-    # Calculate included edges, all edges (all edges only used in computing initial_[vars])
+    # Calculate included edges, all edges
     edge_df = process_edges(df_in, from_var, to_var)
 
     # Compute initial metrics
